@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>sivu</title>
+    </head>
+    <body>
+        <h1> Menot</h1>
+        <button type="button" onclick="navigateToPage('paavalikko.html')">Takaisin</button>
+        <div onclick="showTable('tammikuu')">Tammikuu </div>
+        <div onclick="showTable('helmikuu')">Helmikuu </div>
+
+        <table id="tammikuu" style="display:none">
+            <tr>
+                <th>Ajankohta1</th>
+                <th>Menot</th>
+                {% for row in data %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                    </tr>
+            </tr>
+            </table>
+        <table id="helmikuu" style="display:none">
+            <tr>
+                <th>Ajankohta2</th>
+                <th>Menot</th>
+                {% for row in data %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                    </tr>
+                </tr>
+                </table>
+        
+    </body>
+    <script src="funktiot.js">
+    </script>
+
+</html>
