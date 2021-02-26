@@ -3,7 +3,7 @@
         <title>Sijoitukset</title>
     </head>
     <body>
-        <h1>Tulot</h1>
+        <h1>Sijoitukset</h1>
         <table>
             <tr>
               <th>Ajankohta</th>
@@ -15,8 +15,9 @@
                 <td>{{investment.amount}}</td>
             </tr>
             {% endfor %}
-            <div class="fixed">
-        <button class="button" onclick="navigateToPage('paavalikko.html')"><span>Takaisin</span></button>
+        <div class="fixed">
+            <a href="{% url 'paavalikko' %}" class="btn btn-1">
+            <button type="button" class="btn btn-2">Takaisin</button>
         </div>
         
         <script src="funktiot.js"></script> 

@@ -3,7 +3,7 @@
         <title>Kassavirta</title>
     </head>
     <body>
-        <h1>Tulot</h1>
+        <h1>Kassavirta</h1>
         <table>
             <tr>
               <th>Ajankohta</th>
@@ -18,7 +18,8 @@
                 <td>{{sum}}</td>
             </tr>
             <div class="fixed">
-        <button class="button" onclick="myFunction('paavalikko.html')"><span>Takaisin</span></button>
+            <a href="{% url 'paavalikko' %}">
+            <button type="button" class="button">Takaisin</button>
         </div>
         
         <script src="funktiot.js"></script> 

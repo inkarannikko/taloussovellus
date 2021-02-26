@@ -1,17 +1,16 @@
 <html>
     <head>
         <title>paavalikko</title>
-           
     </head>
     <body>
-         <button type="button" onclick="navigateToPage('sivu.html')">Tulot</button>
-         <button type="button" onclick="navigateToPage('sivu.html')">Menot</button>
-         <button type="button" onclick="navigateToPage('sijoitukset.html')">Sijoitukset</button>
-         <button type="button" onclick="navigateToPage('kassavirta.html')">Kassavirta</button>
-         <p id="demo"></p>
-
-    
+        <a href="{% url 'menot' %}">
+        <button type="button" class="button">Menot</button>
+        <a href="{% url 'tulot' %}">
+        <button type="button" class="button">Tulot</button>
+        <a href="{% url 'sijoitukset' %}">
+        <button type="button" class="button">Sijoitukset</button>
+        <a href="{% url 'kassavirta' %}">
+        <button type="button" class="button">Kassavirta</button>
     </body>
-    <script src="funktiot.js">
-    </script>
+    
 </html>
