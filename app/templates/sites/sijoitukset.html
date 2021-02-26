@@ -9,6 +9,12 @@
               <th>Ajankohta</th>
               <th>Sijoitukset</th>
             </tr>
+            {% for investment in investments %}
+            <tr>
+                <td>{{investment.date}}</td>
+                <td>{{investment.amount}}</td>
+            </tr>
+            {% endfor %}
             <div class="fixed">
         <button class="button" onclick="navigateToPage('paavalikko.html')"><span>Takaisin</span></button>
         </div>

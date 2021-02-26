@@ -12,11 +12,15 @@
             {% for expense in expenses %}
             <div class="expense">
                 <tr>
-                <td>{{expense.date}}</d>
+                <td>{{expense.date}}</td>
                 <td>{{expense.amount}}</td>
                 </tr>
+                {% endfor%}
+                <tr>
+                <td>Yhteensä</td>
+                <td>{{sum}}</td>
+                </tr>
             </div>
-            {% endfor%}
             </table>
         </div>
         

@@ -1,36 +1,27 @@
 <html>
     <head>
-        <title>sivu</title>
+        <title>tulot</title>
     </head>
     <body>
         <h1> Tulot </h1>
-        <button type="button" onclick="navigateToPage('paavalikko.html')">Takaisin</button>
-        <div onclick="showTable('tammikuu')">Tammikuu </div>
-        <div onclick="showTable('helmikuu')">Helmikuu </div>
-
-        <table id="tammikuu" style="display:none">
-            <tr>
-                <th>Ajankohta1</th>
+        <div class="incomes">
+            <table>
+                <th>Ajankohta</th>
                 <th>Menot</th>
-                {% for row in data %}
-                    <tr>
-                        <td>{{row[0]}}</td>
-                        <td>{{row[1]}}</td>
-                    </tr>
-            </tr>
-            </table>
-        <table id="helmikuu" style="display:none">
-            <tr>
-                <th>Ajankohta2</th>
-                <th>Menot</th>
-                {% for row in data %}
-                    <tr>
-                        <td>{{row[0]}}</td>
-                        <td>{{row[1]}}</td>
-                    </tr>
+            {% for income in incomes %}
+            <div class="expense">
+                <tr>
+                <td>{{income.date}}</td>
+                <td>{{income.amount}}</td>
                 </tr>
-                </table>
-        
+                {% endfor%}
+                <tr>
+                <td>Yhteensä</td>
+                <td>{{sum}}</td>
+                </tr>
+            </div>
+            </table>
+        </div>
     </body>
     <script src="funktiot.js">
     </script>

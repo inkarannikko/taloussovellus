@@ -7,6 +7,7 @@ from django.contrib import messages
 from .models import Account
 from django.core.files.storage import default_storage
 import os
+from django.db.models import Sum
 
 
 
@@ -18,17 +19,26 @@ def talous(request):
     return render(request,'sites/talous.html')
 
 def sijoitukset(request):
-    return render(request,'sites/sijoitukset.html')
+    investments = Account.objects.filter(receiver__contains='KELA/FPA')
+    return render(request,'sites/sijoitukset.html',{'investments':investments})
 
 def menot(request):
     expenses = Account.objects.filter(amount__lt=0)
-    return render(request,'sites/menot.html',{'expenses':expenses})
+    sum  = calculate_sum(expenses)
+    return render(request,'sites/menot.html',{'expenses':expenses,'sum':sum})
 
 def tulot(request):
-    return render(request,'sites/tulot.html')
+    incomes = Account.objects.filter(amount__gt=0)
+    sum  = calculate_sum(incomes)
+    return render(request,'sites/tulot.html',{'incomes':incomes,'sum':sum})
 
 def kassavirta(request):
-    return render(request,'sites/kassavirta.html')
+    incomes = Account.objects.filter(amount__gte=0)
+    incomes_sum = calculate_sum(incomes)
+    expenses = Account.objects.filter(amount__lte=0)
+    expenses_sum = calculate_sum(expenses)
+    sum = incomes_sum-expenses_sum
+    return render(request,'sites/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum})
 
 def upload(request):
     if request.method == 'POST':
@@ -46,6 +56,11 @@ def upload(request):
     else:
         return render(request, 'sites/upload.html')
 
+def calculate_sum(queryset):
+    sum=0
+    for query in queryset:
+        sum += query.amount
+    return sum
 
 def change_date_format(d):
     dmy = d.split(".")
