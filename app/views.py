@@ -21,7 +21,8 @@ def sijoitukset(request):
     return render(request,'sites/sijoitukset.html')
 
 def menot(request):
-    return render(request,'sites/menot.html')
+    expenses = Account.objects.filter(amount__lt=0)
+    return render(request,'sites/menot.html',{'expenses':expenses})
 
 def tulot(request):
     return render(request,'sites/tulot.html')
@@ -44,6 +45,7 @@ def upload(request):
         return HttpResponseRedirect('/upload')
     else:
         return render(request, 'sites/upload.html')
+
 
 def change_date_format(d):
     dmy = d.split(".")
