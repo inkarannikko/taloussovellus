@@ -1,16 +1,16 @@
-{%if messages %}
-   {%for message in messages%} 
-     <div>
-         <strong>{{message|safe}}</strong>
-     </div>
-    {%endfor}
-{% else %}
-{{order}}
-<from method="post" enctype = "multipart/form-data">
-    {% srf_token %}
-    <label>Upload a file</label>
-    <input type="file" name="file">
-    <p>Only accepts CSV files</p>
-    <button type="submit">Upload</button>
-</from>
+<html>
+   <body>
+      <form method = "POST" enctype="multipart/form-data"> 
+         {% csrf_token %}
+         <input id="file" type = "file" name = "file" />
+         <input type = "submit" />
+      </form>
+      {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
 {% endif %}
+   </body>
+</html>

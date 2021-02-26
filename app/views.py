@@ -1,7 +1,15 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+import csv, io
+from .forms import UploadFileForm
 from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
 from .models import Account
+from django.core.files.storage import default_storage
+import os
+
+
+
 
 def paavalikko(request):
     return render(request,'sites/paavalikko.html')
@@ -22,31 +30,48 @@ def kassavirta(request):
     return render(request,'sites/kassavirta.html')
 
 def upload(request):
-    return render(request,'sites/upload.html')
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['file']
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'This is not a csv file')
+            else:
+                fs = FileSystemStorage()
+                filename = fs.save(csv_file.name, csv_file)
+                handle_uploaded_file(filename)
+                messages.success(request,'Upload successful')
+        return HttpResponseRedirect('/upload')
+    else:
+        return render(request, 'sites/upload.html')
 
-@permission_required('admin.can_add_log_entry')
-def upload(request):
-    template = "upload.html"
-    prompt = {
-        'order': 'Order of the CSV should be date, amount, receiver'
-    }
-    
+def change_date_format(d):
+    dmy = d.split(".")
+    d = dmy[0]
+    m = dmy[1]
+    y = dmy[2]
+    if (len(d) == 1):
+        d = '0' + d
+    if (len(m) == 1):
+        m = '0' + m
+    return y + '-' + m + '-' + d
 
-    if request.method == "POST":
-        return render(request, template, prompt)
+def handle_uploaded_file(file):
+    f = default_storage.open(os.path.join(file), 'r')
+    counter=0
+    for row in f:
+        if counter==0:
+            counter+=1
+            continue
+        else:
+            counter+=1
+            data_set = row.split(";")
+            date_ = change_date_format(data_set[0])
+            _,  created=Account.objects.update_or_create(
+                date=date_,
+                amount=float(data_set[2].replace(',','.')),
+                receiver=data_set[5]
+            )
+    f.close()
+   
     
-    csv_file = request.FILES['file']
-    if not csv_file.name.endswicth('.csv'):
-        messages.error(request,'This is not a csv file')
-    
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = ioStringIO(data_set)
-    next(io_string)
-    for column in csv.reader(io_string, delimeter=';'):
-        _,  created=Acount.objects.update_or_create(
-            date=column[0],
-            amount=float(column[2]),
-            receiver=column[5]
-        )
-    context = {}
-    return render(request,template,context)
