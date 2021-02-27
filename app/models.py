@@ -7,5 +7,8 @@ class Account(models.Model):
     amount = models.FloatField()
     receiver = models.TextField()
 
+@property
+def __get__year(self):
+    return self.date.strftime("%Y-%m" )
 
-
+    year = property(__get_year)

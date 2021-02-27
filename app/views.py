@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 import csv, io
-from .forms import UploadFileForm
+from .forms import UploadFileForm,MonthForm
 from django.contrib import messages
 from .models import Account
 from django.core.files.storage import default_storage
 import os
-from django.db.models import Sum
+
 
 
 
@@ -23,9 +23,16 @@ def sijoitukset(request):
     return render(request,'sites/sijoitukset.html',{'investments':investments})
 
 def menot(request):
-    expenses = Account.objects.filter(amount__lt=0)
-    sum  = calculate_sum(expenses)
-    return render(request,'sites/menot.html',{'expenses':expenses,'sum':sum})
+    form = MonthForm(request.POST)
+    if form.is_valid():
+        data = form.cleaned_data['wanted_month']
+        expenses = Account.objects.filter(date__month=data,amount__lte=0)
+        sum  = calculate_sum(expenses)
+        return render(request, 'sites/menot.html', {
+        'form': form, 'expenses':expenses, 'sum':sum
+    })
+    else:
+        return render(request,'sites/menot.html',{'form': form})
 
 def tulot(request):
     incomes = Account.objects.filter(amount__gt=0)
@@ -61,6 +68,8 @@ def calculate_sum(queryset):
     for query in queryset:
         sum += query.amount
     return sum
+
+
 
 def change_date_format(d):
     dmy = d.split(".")
