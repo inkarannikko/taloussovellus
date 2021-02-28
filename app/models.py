@@ -4,11 +4,5 @@ from django.db import connection
 
 class Account(models.Model):
     date = models.DateTimeField()
-    amount = models.FloatField()
+    amount = models.DecimalField(max_digits=5,decimal_places=2)
     receiver = models.TextField()
-
-@property
-def __get__year(self):
-    return self.date.strftime("%Y-%m" )
-
-    year = property(__get_year)

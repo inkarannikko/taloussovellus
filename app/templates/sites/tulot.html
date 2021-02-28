@@ -4,14 +4,19 @@
     </head>
     <body>
         <h1> Tulot </h1>
+        <form method="post">
+            {% csrf_token %}    
+            {{form}}
+            <input type="submit" value="Submit">
         <div class="incomes">
             <table>
                 <th>Ajankohta</th>
                 <th>Menot</th>
-            {% for income in incomes %}
-            <div class="expense">
+            {% for expense in expenses %}
+            <div class="income">
                 <tr>
                 <td>{{income.date}}</td>
+                <td>{{income.receiver}}</td>
                 <td>{{income.amount}}</td>
                 </tr>
                 {% endfor%}

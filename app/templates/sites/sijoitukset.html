@@ -4,6 +4,10 @@
     </head>
     <body>
         <h1>Sijoitukset</h1>
+        <form method="post">
+            {% csrf_token %}    
+            {{form}}
+            <input type="submit" value="Submit">
         <table>
             <tr>
               <th>Ajankohta</th>

@@ -4,15 +4,17 @@
     </head>
     <body>
         <h1>Kassavirta</h1>
+        <form method="post">
+            {% csrf_token %}    
+            {{form}}
+            <input type="submit" value="Submit">
         <table>
             <tr>
-              <th>Ajankohta</th>
               <th>Tulot</th>
               <th>Menot</th>
               <th>Yhteensä</th>
             </tr>
             <tr>
-                <td></td>
                 <td>{{incomes_sum}}</td>
                 <td>{{expenses_sum}}</td>
                 <td>{{sum}}</td>

@@ -6,7 +6,10 @@ from .forms import UploadFileForm,MonthForm
 from django.contrib import messages
 from .models import Account
 from django.core.files.storage import default_storage
+from functools import reduce
 import os
+import operator
+from django.db.models import Q
 
 
 
@@ -19,33 +22,61 @@ def talous(request):
     return render(request,'sites/talous.html')
 
 def sijoitukset(request):
-    investments = Account.objects.filter(receiver__contains='KELA/FPA')
-    return render(request,'sites/sijoitukset.html',{'investments':investments})
+    form = MonthForm(request.POST)
+    if form.is_valid():
+        data = form.cleaned_data['wanted_month']
+        investments = Account.objects.filter(receiver__contains='Nordnet Bank AB')
+        return render(request,'sites/sijoitukset.html',{'investments':investments})
+    else:
+        return render(request,'sites/sijoitukset.html',{'form': form})
+
+ruoka = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TRE HERVANTA   TAMPERE','K SUPERMARKET HERKK TAMPERE','PRISMA KALEVA       TAMPERE',
+'K Supermarket Ratin Tampere']
+terveys = ['0540 Bonusapteekki  Tampere']
+asuminen = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
 
 def menot(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
-        expenses = Account.objects.filter(date__month=data,amount__lte=0)
-        sum  = calculate_sum(expenses)
+        expenses = Account.objects.filter(amount__lte=0,date__month=data)
+        sum = calculate_sum(expenses)
+        food = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in ruoka)),date__month=data)
+        health = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in terveys)),date__month=data)
+        hsum = calculate_sum(health)
+        fsum  = calculate_sum(food)
+        living = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in asuminen)),date__month=data)
+        lsum = calculate_sum(living)
         return render(request, 'sites/menot.html', {
-        'form': form, 'expenses':expenses, 'sum':sum
+        'form': form, 'sum':sum, 'hsum':hsum, 'fsum':fsum,'lsum':lsum
     })
     else:
         return render(request,'sites/menot.html',{'form': form})
 
 def tulot(request):
-    incomes = Account.objects.filter(amount__gt=0)
-    sum  = calculate_sum(incomes)
-    return render(request,'sites/tulot.html',{'incomes':incomes,'sum':sum})
+    form = MonthForm(request.POST)
+    if form.is_valid():
+        data = form.cleaned_data['wanted_month']
+        incomes = Account.objects.filter(amount__gt=0,date__month=data)
+        sum  = calculate_sum(incomes)
+        return render(request, 'sites/tulot.html', {
+        'form': form, 'incomes':incomes, 'sum':sum
+    })
+    else:
+        return render(request,'sites/tulot.html',{'form':form})
 
 def kassavirta(request):
-    incomes = Account.objects.filter(amount__gte=0)
-    incomes_sum = calculate_sum(incomes)
-    expenses = Account.objects.filter(amount__lte=0)
-    expenses_sum = calculate_sum(expenses)
-    sum = incomes_sum-expenses_sum
-    return render(request,'sites/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum})
+    form = MonthForm(request.POST)
+    if form.is_valid():
+        data = form.cleaned_data['wanted_month']
+        incomes = Account.objects.filter(amount__gte=0,date__month=data)
+        incomes_sum = calculate_sum(incomes)
+        expenses = Account.objects.filter(amount__lte=0,date__month=data)
+        expenses_sum = calculate_sum(expenses)
+        sum = incomes_sum-expenses_sum
+        return render(request,'sites/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum,'form':form})
+    else:
+        return render(request,'sites/kassavirta.html',{'form':form})
 
 def upload(request):
     if request.method == 'POST':
@@ -68,7 +99,6 @@ def calculate_sum(queryset):
     for query in queryset:
         sum += query.amount
     return sum
-
 
 
 def change_date_format(d):
