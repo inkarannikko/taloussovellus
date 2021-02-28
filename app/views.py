@@ -30,22 +30,22 @@ def sijoitukset(request):
     else:
         return render(request,'sites/sijoitukset.html',{'form': form})
 
-ruoka = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TRE HERVANTA   TAMPERE','K SUPERMARKET HERKK TAMPERE','PRISMA KALEVA       TAMPERE',
+food = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TRE HERVANTA   TAMPERE','K SUPERMARKET HERKK TAMPERE','PRISMA KALEVA       TAMPERE',
 'K Supermarket Ratin Tampere']
-terveys = ['0540 Bonusapteekki  Tampere']
-asuminen = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
+health = ['0540 Bonusapteekki  Tampere']
+living = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
 
-def menot(request):
+def expenses(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
         expenses = Account.objects.filter(amount__lte=0,date__month=data)
         sum = calculate_sum(expenses)
-        food = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in ruoka)),date__month=data)
+        food = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in food)),date__month=data)
         health = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in terveys)),date__month=data)
         hsum = calculate_sum(health)
         fsum  = calculate_sum(food)
-        living = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in asuminen)),date__month=data)
+        living = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in living)),date__month=data)
         lsum = calculate_sum(living)
         return render(request, 'sites/menot.html', {
         'form': form, 'sum':sum, 'hsum':hsum, 'fsum':fsum,'lsum':lsum
@@ -53,14 +53,16 @@ def menot(request):
     else:
         return render(request,'sites/menot.html',{'form': form})
 
-def tulot(request):
+def incomes(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
-        incomes = Account.objects.filter(amount__gt=0,date__month=data)
-        sum  = calculate_sum(incomes)
+        allowances = Account.objects.filter(receiver__contains='KELA/FPA',date__month=data)
+        asum = calculate_sum(allowances)
+        incomes = Account.objects.filter(amount__gte=0,date__month=data)
+        sum = calculate_sum(incomes)
         return render(request, 'sites/tulot.html', {
-        'form': form, 'incomes':incomes, 'sum':sum
+        'form': form, 'asum':asum, 'sum':sum
     })
     else:
         return render(request,'sites/tulot.html',{'form':form})

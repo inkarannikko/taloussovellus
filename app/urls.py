@@ -8,8 +8,8 @@ from .import views
 urlpatterns = [
     path('', views.talous, name='talous'),
     path('upload/', views.upload, name='upload'),
-    path('menot/', views.menot, name='menot'),
-    path('tulot/', views.tulot, name='tulot'),
+    path('menot/', views.expenses, name='menot'),
+    path('tulot/', views.incomes, name='tulot'),
     path('sijoitukset/', views.sijoitukset, name='sijoitukset'),
     path('kassavirta/', views.kassavirta, name='kassavirta'),
     path('paavalikko/',views.paavalikko, name='paavalikko')
