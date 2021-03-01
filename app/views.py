@@ -16,24 +16,24 @@ from django.db.models import Q
 
 
 def paavalikko(request):
-    return render(request,'sites/paavalikko.html')
+    return render(request,'app/paavalikko.html')
 
 def talous(request):
-    return render(request,'sites/talous.html')
+    return render(request,'app/talous.html')
 
 def sijoitukset(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
         investments = Account.objects.filter(receiver__contains='Nordnet Bank AB')
-        return render(request,'sites/sijoitukset.html',{'investments':investments})
+        return render(request,'app/sijoitukset.html',{'investments':investments})
     else:
-        return render(request,'sites/sijoitukset.html',{'form': form})
+        return render(request,'app/sijoitukset.html',{'form': form})
 
-food = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TRE HERVANTA   TAMPERE','K SUPERMARKET HERKK TAMPERE','PRISMA KALEVA       TAMPERE',
+ruoka = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TRE HERVANTA   TAMPERE','K SUPERMARKET HERKK TAMPERE','PRISMA KALEVA       TAMPERE',
 'K Supermarket Ratin Tampere']
-health = ['0540 Bonusapteekki  Tampere']
-living = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
+terveys = ['0540 Bonusapteekki  Tampere']
+asuminen = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
 
 def expenses(request):
     form = MonthForm(request.POST)
@@ -41,17 +41,18 @@ def expenses(request):
         data = form.cleaned_data['wanted_month']
         expenses = Account.objects.filter(amount__lte=0,date__month=data)
         sum = calculate_sum(expenses)
-        food = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in food)),date__month=data)
+        food = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in ruoka)),date__month=data)
         health = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in terveys)),date__month=data)
         hsum = calculate_sum(health)
         fsum  = calculate_sum(food)
-        living = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in living)),date__month=data)
+        living = Account.objects.filter(reduce(operator.or_, (Q(receiver__contains=item) for item in asuminen)),date__month=data)
         lsum = calculate_sum(living)
-        return render(request, 'sites/menot.html', {
-        'form': form, 'sum':sum, 'hsum':hsum, 'fsum':fsum,'lsum':lsum
+        others = sum-fsum-hsum-lsum
+        return render(request, 'app/menot.html', {
+        'form': form, 'sum':sum, 'hsum':hsum, 'fsum':fsum,'lsum':lsum,'others':others
     })
     else:
-        return render(request,'sites/menot.html',{'form': form})
+        return render(request,'app/menot.html',{'form': form})
 
 def incomes(request):
     form = MonthForm(request.POST)
@@ -61,11 +62,11 @@ def incomes(request):
         asum = calculate_sum(allowances)
         incomes = Account.objects.filter(amount__gte=0,date__month=data)
         sum = calculate_sum(incomes)
-        return render(request, 'sites/tulot.html', {
+        return render(request, 'app/tulot.html', {
         'form': form, 'asum':asum, 'sum':sum
     })
     else:
-        return render(request,'sites/tulot.html',{'form':form})
+        return render(request,'app/tulot.html',{'form':form})
 
 def kassavirta(request):
     form = MonthForm(request.POST)
@@ -76,9 +77,9 @@ def kassavirta(request):
         expenses = Account.objects.filter(amount__lte=0,date__month=data)
         expenses_sum = calculate_sum(expenses)
         sum = incomes_sum-expenses_sum
-        return render(request,'sites/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum,'form':form})
+        return render(request,'app/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum,'form':form})
     else:
-        return render(request,'sites/kassavirta.html',{'form':form})
+        return render(request,'app/kassavirta.html',{'form':form})
 
 def upload(request):
     if request.method == 'POST':
