@@ -1,6 +1,4 @@
 import os
-
-
 """
 Django settings for taloudenseuranta project.
 
@@ -126,15 +124,8 @@ USE_TZ = True
 #)
 
 
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,  'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-
-
-import mimetypes
-mimetypes.add_type("text/css", ".css", True)
-mimetypes.add_type("text/html", ".html", True)
-mimetypes.add_type("image/png", ".png", True)
