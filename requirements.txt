@@ -1,1 +1,1 @@
-requirements.txt hosted with ❤ by GitHub
+django==2.1.7
