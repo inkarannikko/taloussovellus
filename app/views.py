@@ -11,22 +11,18 @@ import os
 import operator
 from django.db.models import Q
 
-
-
-
-
 def paavalikko(request):
     return render(request,'app/paavalikko.html')
 
 def talous(request):
     return render(request,'app/talous.html')
 
-def sijoitukset(request):
+def investments(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
-        investments = Account.objects.filter(receiver__contains='Nordnet Bank AB')
-        return render(request,'app/sijoitukset.html',{'investments':investments})
+        investments = Account.objects.filter(receiver__contains='Nordnet Bank AB',date__month=data)
+        return render(request,'app/sijoitukset.html',{'investments':investments,'form': form})
     else:
         return render(request,'app/sijoitukset.html',{'form': form})
 
@@ -34,6 +30,7 @@ ruoka = ['S MARKET HERVANTA   TAMPERE', 'K market Kiukainen  Kiukainen','LIDL TR
 'K Supermarket Ratin Tampere']
 terveys = ['0540 Bonusapteekki  Tampere']
 asuminen = ['TAMPEREEN S. OPISKELIJA-ASUNTO']
+
 
 def expenses(request):
     form = MonthForm(request.POST)
@@ -62,13 +59,14 @@ def incomes(request):
         asum = calculate_sum(allowances)
         incomes = Account.objects.filter(amount__gte=0,date__month=data)
         sum = calculate_sum(incomes)
+        others = sum-asum
         return render(request, 'app/tulot.html', {
-        'form': form, 'asum':asum, 'sum':sum
+        'form': form, 'asum':asum, 'sum':sum, 'others':others,
     })
     else:
         return render(request,'app/tulot.html',{'form':form})
 
-def kassavirta(request):
+def cashflow(request):
     form = MonthForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data['wanted_month']
@@ -76,7 +74,7 @@ def kassavirta(request):
         incomes_sum = calculate_sum(incomes)
         expenses = Account.objects.filter(amount__lte=0,date__month=data)
         expenses_sum = calculate_sum(expenses)
-        sum = incomes_sum-expenses_sum
+        sum = incomes_sum+expenses_sum
         return render(request,'app/kassavirta.html',{'incomes_sum':incomes_sum,'expenses_sum':expenses_sum,'sum':sum,'form':form})
     else:
         return render(request,'app/kassavirta.html',{'form':form})

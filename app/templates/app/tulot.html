@@ -2,6 +2,8 @@
     <head>
         <title>tulot</title>
         <meta charset="utf-8">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -26,6 +28,10 @@
                     <td>{{asum}}</td>
                 </tr>
                 <tr>
+                    <td>muut</td>
+                    <td>{{others}}</td>
+                </tr>
+                <tr>
                 <td>Yhteensä</td>
                 <td>{{sum}}</td>
                 </tr>
@@ -33,7 +39,8 @@
             </table>
         </div>
     </body>
+    <div class="fixed">
     <a href="{% url 'paavalikko' %}">
     <button type="button" class="button">Takaisin</button>
-
+    </div>
 </html>

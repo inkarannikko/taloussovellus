@@ -10,8 +10,8 @@ urlpatterns = [
     path('upload/', views.upload, name='upload'),
     path('menot/', views.expenses, name='menot'),
     path('tulot/', views.incomes, name='tulot'),
-    path('sijoitukset/', views.sijoitukset, name='sijoitukset'),
-    path('kassavirta/', views.kassavirta, name='kassavirta'),
+    path('sijoitukset/', views.investments, name='sijoitukset'),
+    path('kassavirta/', views.cashflow, name='kassavirta'),
     path('paavalikko/',views.paavalikko, name='paavalikko')
     
 ]

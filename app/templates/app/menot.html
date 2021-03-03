@@ -3,7 +3,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% load static %}
-        <link href="{% static "app/style.css" %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -11,46 +11,55 @@
         <title>sivu</title>
     </head>
     <body>
+        <div>
         <div class="jumbotron text">
             <h1> Menot</h1>
         </div>
-        <form method="post">
-            {% csrf_token %}    
-            {{form}}
-            <input type="submit" value="Submit">
-        <div class="fixed">
-            <table>
-                <th>Kategoria</th>
-                <th>Menot</th>
-                <tr>
-                <td>ruoka</td>
-                <td>{{fsum}}</td>
-                </tr>
-                <tr>
-                    <td>terveys</td>
-                    <td>{{hsum}}</td>
-                </tr>
-                <tr>
-                    <td>asuminen</td>
-                    <td>{{lsum}}</td>
-                </tr>
-                <tr>
-                    <td>muut</td>
-                    <td>{{others}}</td>
-                </tr>
-                <tr>
-                <td>Yhteensä</td>
-                <td>{{sum}}</td>
-                </tr>
-            
+        <div>
+            <form method="post">
+                {% csrf_token %}    
+                {{form}}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Kategoria</th>
+                        <th>Menot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ruoka</td>
+                        <td>{{fsum}}</td>
+                    </tr>
+                    <tr>
+                        <td>terveys</td>
+                        <td>{{hsum}}</td>
+                    </tr>
+                    <tr>
+                        <td>asuminen</td>
+                        <td>{{lsum}}</td>
+                    </tr>
+                    <tr>
+                        <td>muut</td>
+                        <td>{{others}}</td>
+                    </tr>
+                    <tr>
+                        <td>Yhteensä</td>
+                        <td>{{sum}}</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
-        <div class="fixed">
-        <a href="{% url 'paavalikko' %}">
-        <button type="button" class="button">Takaisin</button>
-        </div>
-        
-        
+        <div>
+            <div class="fixed">
+                <a href="{% url 'paavalikko' %}">
+                <button type="button" class="button">Takaisin</button>
+            </div>
+        </div> 
+    </div>
     </body>
-
 </html>

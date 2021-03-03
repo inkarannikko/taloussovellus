@@ -4,8 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% load static %}
-        <link href="{% static "app/style.css" %}" rel="stylesheet">
-        <img src="{% static "app/mouse.png" %}" alt="mouse"/>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -22,6 +21,12 @@
         <a href="{% url 'kassavirta' %}">
         <button type="button" class="button"><span>Kassavirta</span></button>
         </div>
+
+        <div class="fixed">
+            <a href="{% url 'talous' %}">
+            <button type="button" class="button"><span>Takaisin</span></button>
+        </div>
+        
     </body>
     
 </html>
