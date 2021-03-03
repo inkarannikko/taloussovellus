@@ -1,4 +1,7 @@
 import os
+import mimetypes
+
+mimetypes.add_type("text/css", ".css", True)
 """
 Django settings for taloudenseuranta project.
 
