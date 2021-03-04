@@ -1,5 +1,5 @@
 body{
-  cursor: url('static/app/img/mouse.png'), auto;
+  cursor: url('app/img/mouse.png'), auto;
   background-size: cover;
 }
 h1 {
